@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,19 +63,28 @@ public class BatchMessageService {
         buffer.drainTo(batch, BATCH_SIZE);
 
         lastBatchTime = System.currentTimeMillis();
-        executor.submit(() -> processBatch(batch, reason));
+        executor.submit(() -> {
+            try {
+                processBatch(batch, reason);
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        log.info("Submit to thread");
     }
 
     /**
      * Xử lý batch message
      */
-    private void processBatch(List<String> batch, String reason) {
+    private void processBatch(List<String> batch, String reason) throws InterruptedException {
         log.info(Thread.currentThread().getName() +
                 " Processing (" + reason + "): " + batch);;
 
         for (String message : batch) {
             transactionService.saveTransaction(message);
         }
+//        log.info("Sleep 5s!");
+//        Thread.sleep(5000);
 
     }
 }

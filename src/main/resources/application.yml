@@ -1,4 +1,4 @@
-# ⚡️ Cấu hình mặc định (dùng chung cho tất cả profile)
+
 server:
   servlet:
     context-path: /
@@ -21,14 +21,17 @@ spring:
   kafka:
     #Kafka bootstrap servers
     bootstrap-servers: localhost:9092
+    listener:
+      ack-mode: MANUAL
+      concurrency: 3
     # Consumer Config
     consumer:
       group-id: demo-group
       auto-offset-reset: earliest
       key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
       value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
-      enable-auto-commit: true
-      concurrency: 3
+      enable-auto-commit: false
+
     # Producer Config
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer

@@ -50,10 +50,10 @@ public class ProducerService {
         int perSecond = (int) Math.ceil(targetPerMinute / 60.0);
 
         int cnt=0;
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 3; i++) {
             for (int j = 0; j < perSecond; j++) {
                 TransactionRequest tx = generateRandomTransaction();
-                //System.out.println("send message "+cnt++);
+                System.out.println("Sending random Transaction "+ cnt++);
                 kafkaTemplate.send("transaction_logs",tx.getUserId(), gson.toJson(tx));
             }
         }
@@ -61,6 +61,7 @@ public class ProducerService {
 
     private TransactionRequest generateRandomTransaction(){
         return TransactionRequest.builder()
+                .id(ThreadLocalRandom.current().nextLong(1,50000))
                 .userId(UUID.randomUUID().toString())
                 .amount(ThreadLocalRandom.current().nextLong(1000,20000000))
                 .build();

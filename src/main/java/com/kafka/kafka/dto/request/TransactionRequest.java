@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 @AllArgsConstructor
 public class TransactionRequest implements Serializable {
+    private Long id;
     private String userId;
     private Long amount;
 }
