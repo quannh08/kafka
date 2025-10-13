@@ -19,7 +19,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class BatchMessageService {
 
     private static final int BATCH_SIZE = 10;     // đủ 10 message mới xử lý
-    private static final long TIMEOUT_MS = 10000; // 10 giây timeout
+    private static final long TIMEOUT_MS = 5000; // 10 giây timeout
 
     @Qualifier("customExecutor")
     private final ThreadPoolTaskExecutor executor;
@@ -30,9 +30,9 @@ public class BatchMessageService {
 
     private long lastBatchTime = System.currentTimeMillis();
 
-
-
-
+    /**
+     * Nhận message vào cho vào hàng đợi
+     * */
     public void receiveMessage(String message) {
         buffer.add(message);
 
@@ -83,8 +83,5 @@ public class BatchMessageService {
         for (String message : batch) {
             transactionService.saveTransaction(message);
         }
-//        log.info("Sleep 5s!");
-//        Thread.sleep(5000);
-
     }
 }

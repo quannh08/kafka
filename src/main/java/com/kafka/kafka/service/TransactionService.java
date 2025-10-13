@@ -25,6 +25,7 @@ public class TransactionService {
 
         Transaction transaction = Transaction.builder()
                 .id(request.getId())
+                .userId(request.getUserId())
                 .amount(request.getAmount())
                 .timestamp(LocalDateTime.now())
                 .build();

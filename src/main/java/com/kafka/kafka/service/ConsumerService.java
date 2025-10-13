@@ -1,9 +1,5 @@
 package com.kafka.kafka.service;
 
-import com.google.gson.Gson;
-import com.kafka.kafka.dto.request.TransactionRequest;
-import com.kafka.kafka.entity.Transaction;
-import com.kafka.kafka.repository.TransactionRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
@@ -18,18 +14,14 @@ import java.time.LocalDateTime;
 @Slf4j(topic = "CONSUMER-SERVICE")
 public class ConsumerService {
 
-    private final TransactionRepository transactionRepository;
-
     private final BatchMessageService batchMessageService;
 
-    @KafkaListener(topics = "transaction_logs", groupId = "demo-group")
+    @KafkaListener(topics = "transaction_log", groupId = "demo-group")
     public void listenGroup(ConsumerRecord<String, String> record, Acknowledgment ack) {
         try{
             log.info("Received raw: {}", record.value());
             batchMessageService.receiveMessage(record.value());
 
-            log.info("Sleep 5s!");
-            Thread.sleep(5000);
             ack.acknowledge();
         }
         catch (Exception e){

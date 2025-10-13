@@ -49,12 +49,10 @@ public class ProducerService {
         int targetPerMinute = 1000;
         int perSecond = (int) Math.ceil(targetPerMinute / 60.0);
 
-        int cnt=0;
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 60; i++) {
             for (int j = 0; j < perSecond; j++) {
                 TransactionRequest tx = generateRandomTransaction();
-                System.out.println("Sending random Transaction "+ cnt++);
-                kafkaTemplate.send("transaction_logs",tx.getUserId(), gson.toJson(tx));
+                kafkaTemplate.send("transaction_log",tx.getUserId(), gson.toJson(tx));
             }
         }
     }
