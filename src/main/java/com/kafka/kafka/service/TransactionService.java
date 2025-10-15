@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class TransactionService {
     private final TransactionRepository transactionRepository;
 
-    @Transactional
+    @Transactional(rollbackOn =  Exception.class)
     public Long saveTransaction(String message) {
         log.info("save transaction");
         TransactionRequest request = new Gson().fromJson(message, TransactionRequest.class);

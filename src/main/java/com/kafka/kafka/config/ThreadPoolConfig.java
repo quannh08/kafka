@@ -1,6 +1,7 @@
 package com.kafka.kafka.config;
 
 import com.kafka.kafka.repository.ThreadConfigRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -8,6 +9,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 @Configuration
+@Slf4j(topic = "THREADPOOL-CONFIG")
 public class ThreadPoolConfig {
 
     @Autowired
@@ -41,11 +43,12 @@ public class ThreadPoolConfig {
                 .orElse(5); // mặc định 5 nếu chưa có trong DB
     }
 
+    //Check lại DB theo định kì
     @Scheduled(fixedRate = 60000)
     public void refreshThreadPool() {
         int newSize = getThreadPoolSizeFromDb();
         if (executor != null && newSize != executor.getCorePoolSize()) {
-            System.out.println("Updating thread pool size from "
+            log.info("Updating thread pool size from "
                     + executor.getCorePoolSize() + " → " + newSize);
             executor.setCorePoolSize(newSize);
             executor.setMaxPoolSize(newSize*2);

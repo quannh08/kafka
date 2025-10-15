@@ -18,9 +18,10 @@ spring:
       hibernate:
         format_sql: true
 
-#  kafka:
-#    # Kafka bootstrap servers
-#    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+  kafka:
+    # Kafka bootstrap servers
+    bootstrap-servers: localhost:9092,localhost:9093,localhost:9094
+
 #    listener:
 #      ack-mode: MANUAL
 #      concurrency: 3
