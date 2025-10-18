@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.annotation.RetryableTopic;
 import org.springframework.kafka.support.Acknowledgment;
+import org.springframework.retry.annotation.Backoff;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -21,29 +23,20 @@ public class ConsumerService {
 
 
     @KafkaListener(topics = "transaction_log", groupId = "demo-group")
+    @RetryableTopic(attempts = "4", backoff = @Backoff(delay = 1000))
     public void listenMainTopic(ConsumerRecord<String, String> record, Acknowledgment ack) {
         processMessage(record, ack);
     }
 
-    @KafkaListener(topicPattern = "topic-retry-.*", groupId = "dynamic-group")
-    public void listenRetryTopic(ConsumerRecord<String, String> record, Acknowledgment ack) {
-        processMessage(record,ack);
-    }
+//    @KafkaListener(topicPattern = "topic-retry-.*", groupId = "demo-group")
+//    public void listenRetryTopic(ConsumerRecord<String, String> record, Acknowledgment ack) {
+//        log.info("Retry topic-retry-{}-{}", record.topic(), record.partition());
+//        processMessage(record,ack);
+//    }
 
     public void processMessage(ConsumerRecord<String, String> record, Acknowledgment ack) {
-        try {
-            log.info("Processing message from topic {}: {}", record.topic(), record.value());
+        log.info("Processing message from topic {}: {}", record.topic(), record.value());
 
-            batchMessageService.receiveMessage(record.value());
-
-            ack.acknowledge();
-        } catch (Exception e) {
-            int retryCount = retryHandlerService.getRetryCount(record.headers());
-
-            log.error("Error processing message (retryCount={}): {}", retryCount, e.getMessage());
-            retryHandlerService.handleError(record.value(), retryCount);
-            ack.acknowledge();
-        }
+        batchMessageService.receiveMessage(record.value(),ack,null);
     }
-
 }

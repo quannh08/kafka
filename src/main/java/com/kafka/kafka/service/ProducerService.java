@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j(topic = "TRANSACTION-SERVICE")
+@Slf4j(topic = "PRODUCER-SERVICE")
 public class ProducerService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
@@ -46,14 +46,21 @@ public class ProducerService {
     public void sendRandomTransaction() throws InterruptedException {
         log.info("send 1000 Transaction");
 
+        int cnt =0;
         int targetPerMinute = 1000;
         int perSecond = (int) Math.ceil(targetPerMinute / 60.0);
-//        int cnt=0;
         for (int i = 0; i < 60; i++) {
             for (int j = 0; j < perSecond; j++) {
                 TransactionRequest tx = generateRandomTransaction();
-                kafkaTemplate.send("transaction_log",tx.getUserId(), gson.toJson(tx));
-//                log.info("Send transaction number: {}",cnt++);
+                kafkaTemplate.send("transaction_log",tx.getUserId(), gson.toJson(tx))
+                        .whenComplete((result, ex) -> {
+                            if (ex == null) {
+
+                                log.info("Sent successfully to partition {}", result.getRecordMetadata().partition());
+                            } else {
+                                log.error("Failed to send transaction", ex);
+                            }
+                        });
             }
             Thread.sleep(1000);
         }
