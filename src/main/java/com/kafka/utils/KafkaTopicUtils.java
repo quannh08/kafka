@@ -1,4 +1,4 @@
-package com.kafka.kafka.utils;
+package com.kafka.utils;
 
 import org.apache.kafka.clients.admin.*;
 import org.springframework.stereotype.Component;

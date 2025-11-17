@@ -1,6 +1,6 @@
-package com.kafka.kafka.repository;
+package com.kafka.repository;
 
-import com.kafka.kafka.entity.Transaction;
+import com.kafka.entity.Transaction;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

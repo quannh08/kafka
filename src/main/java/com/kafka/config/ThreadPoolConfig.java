@@ -1,12 +1,14 @@
-package com.kafka.kafka.config;
+package com.kafka.config;
 
-import com.kafka.kafka.repository.ThreadConfigRepository;
+import com.kafka.repository.ThreadConfigRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+
+import java.util.concurrent.ThreadPoolExecutor;
 
 @Configuration
 @Slf4j(topic = "THREADPOOL-CONFIG")
@@ -31,6 +33,8 @@ public class ThreadPoolConfig {
         executor.setThreadNamePrefix("BatchThread-");
         executor.setWaitForTasksToCompleteOnShutdown(true);
         executor.setAwaitTerminationSeconds(60);
+        executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy()  );
+        // CallerRunsPolicy = chạy ngay task đó bằng thread hiện tại (thread gọi submit)
         executor.initialize();
 
         return executor;

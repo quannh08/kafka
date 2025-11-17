@@ -1,6 +1,6 @@
-package com.kafka.kafka.service;
+package com.kafka.service;
 
-import com.kafka.kafka.record.MessageWrapper;
+import com.kafka.record.MessageWrapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.common.header.Headers;

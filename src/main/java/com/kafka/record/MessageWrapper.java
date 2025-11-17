@@ -1,4 +1,4 @@
-package com.kafka.kafka.record;
+package com.kafka.record;
 
 import org.apache.kafka.common.header.Headers;
 import org.springframework.kafka.support.Acknowledgment;

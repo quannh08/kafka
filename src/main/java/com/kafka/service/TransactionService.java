@@ -1,13 +1,12 @@
-package com.kafka.kafka.service;
+package com.kafka.service;
 
 import com.google.gson.Gson;
-import com.kafka.kafka.dto.request.TransactionRequest;
-import com.kafka.kafka.entity.Transaction;
-import com.kafka.kafka.repository.TransactionRepository;
+import com.kafka.dto.request.TransactionRequest;
+import com.kafka.entity.Transaction;
+import com.kafka.repository.TransactionRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;

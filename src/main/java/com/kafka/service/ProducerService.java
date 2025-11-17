@@ -1,9 +1,8 @@
-package com.kafka.kafka.service;
+package com.kafka.service;
 
 
 import com.google.gson.Gson;
-import com.kafka.kafka.dto.request.TransactionRequest;
-import com.kafka.kafka.entity.Transaction;
+import com.kafka.dto.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -62,7 +61,7 @@ public class ProducerService {
                             }
                         });
             }
-            Thread.sleep(1000);
+//            Thread.sleep(1000);
         }
     }
 
