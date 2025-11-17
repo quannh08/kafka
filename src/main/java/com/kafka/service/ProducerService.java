@@ -1,9 +1,8 @@
-package com.kafka.kafka.service;
+package com.kafka.service;
 
 
 import com.google.gson.Gson;
-import com.kafka.kafka.dto.request.TransactionRequest;
-import com.kafka.kafka.entity.Transaction;
+import com.kafka.dto.request.TransactionRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -16,7 +15,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j(topic = "TRANSACTION-SERVICE")
+@Slf4j(topic = "PRODUCER-SERVICE")
 public class ProducerService {
 
     private final KafkaTemplate<String, Object> kafkaTemplate;
@@ -46,20 +45,29 @@ public class ProducerService {
     public void sendRandomTransaction() throws InterruptedException {
         log.info("send 1000 Transaction");
 
+        int cnt =0;
         int targetPerMinute = 1000;
         int perSecond = (int) Math.ceil(targetPerMinute / 60.0);
-
         for (int i = 0; i < 60; i++) {
             for (int j = 0; j < perSecond; j++) {
                 TransactionRequest tx = generateRandomTransaction();
-                kafkaTemplate.send("transaction_log",tx.getUserId(), gson.toJson(tx));
+                kafkaTemplate.send("transaction_log",tx.getUserId(), gson.toJson(tx))
+                        .whenComplete((result, ex) -> {
+                            if (ex == null) {
+
+                                log.info("Sent successfully to partition {}", result.getRecordMetadata().partition());
+                            } else {
+                                log.error("Failed to send transaction", ex);
+                            }
+                        });
             }
+//            Thread.sleep(1000);
         }
     }
 
     private TransactionRequest generateRandomTransaction(){
         return TransactionRequest.builder()
-                .id(ThreadLocalRandom.current().nextLong(1,50000))
+                .id(ThreadLocalRandom.current().nextLong(1,500000))
                 .userId(UUID.randomUUID().toString())
                 .amount(ThreadLocalRandom.current().nextLong(1000,20000000))
                 .build();

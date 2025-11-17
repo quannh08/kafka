@@ -1,7 +1,7 @@
-package com.kafka.kafka.controller;
+package com.kafka.controller;
 
-import com.kafka.kafka.dto.request.TransactionRequest;
-import com.kafka.kafka.service.ProducerService;
+import com.kafka.dto.request.TransactionRequest;
+import com.kafka.service.ProducerService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;

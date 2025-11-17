@@ -1,4 +1,4 @@
-package com.kafka.kafka.config;
+package com.kafka.config;
 
 import com.google.gson.Gson;
 import org.springframework.context.annotation.Bean;
